@@ -3,31 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>나의 월차 매니저 📅</title>
+    <title>월차매니저 🏖️</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
     <meta name="apple-mobile-web-app-title" content="월차매니저">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏖️%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏖️%3C/text%3E%3C/svg%3E">
 
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f5f5f7; 
-            padding: 20px; 
-            text-align: center; 
-            color: #1d1d1f;
-            margin: 0;
-            -webkit-tap-highlight-color: transparent; /* 모바일 터치 시 깜빡임 방지 */
-        }
-        .container { 
-            max-width: 500px; 
-            margin: 20px auto; 
-            background: white; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.04); 
-            box-sizing: border-box;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f5f5f7; padding: 20px; text-align: center; color: #1d1d1f; margin: 0; -webkit-tap-highlight-color: transparent; }
+        .container { max-width: 500px; margin: 20px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); box-sizing: border-box;}
         h1 { font-size: 24px; font-weight: 600; margin-top: 0; margin-bottom: 5px; }
         .subtitle { color: #86868b; font-size: 14px; margin-bottom: 25px; }
         .info-box { background: #f5f5f7; padding: 20px; border-radius: 14px; margin: 20px 0; text-align: left; }
@@ -38,131 +26,6 @@
         .calendar-box { margin-top: 25px; padding: 20px; border: 1px solid #d2d2d7; border-radius: 14px; }
         label { display: block; margin-bottom: 12px; font-weight: 500; font-size: 14px; text-align: left; color: #515154;}
         
-        /* 모바일 대응 가로 정렬 플렉스 박스 */
         .input-group { display: flex; gap: 10px; }
         
-        input[type="date"] { 
-            flex: 2; 
-            padding: 12px; 
-            border: 1px solid #d2d2d7; 
-            border-radius: 10px; 
-            font-size: 15px; 
-            box-sizing: border-box; 
-            background: #fff; 
-            color: #1d1d1f;
-            font-family: inherit;
-            -webkit-appearance: none; /* iOS 기본 스타일 제거 */
-        }
-        
-        button { 
-            flex: 1; 
-            background: #0071e3; 
-            color: white; 
-            border: none; 
-            padding: 12px 15px; 
-            font-size: 15px; 
-            font-weight: 500; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            transition: background 0.2s; 
-            white-space: nowrap; 
-        }
-        button:hover { background: #0077ed; }
-
-        /* 초소형 디스플레이용 예외 처리 */
-        @media (max-width: 360px) {
-            .input-group { flex-direction: column; }
-            button { width: 100%; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>스페인을 위한 연차 계산🇪🇸</h1>
-    <div class="subtitle">입사일: 2026년 5월 26일</div>
-    
-    <div class="info-box">
-        <div class="row">
-            <span>현재까지 적립된 총 월차:</span>
-            <span id="accrued" class="highlight">0개</span>
-        </div>
-        <div class="row">
-            <span>사용한 월차 (수동 입력):</span>
-            <span><input type="number" id="used" value="1" min="0" onchange="calculateLeave()" style="width: 50px; text-align: center; padding: 5px; border: 1px solid #d2d2d7; border-radius: 6px; font-size: 15px;"> 개</span>
-        </div>
-        <div class="row total-row">
-            <span>현재 남은 자율 월차:</span>
-            <span id="remaining" style="color:#ff3b30;">0개</span>
-        </div>
-    </div>
-
-    <div class="calendar-box">
-        <label for="leave-date">🏖️ 애플 캘린더에 등록할 월차 날짜 선택:</label>
-        <div class="input-group">
-            <input type="date" id="leave-date" value="2026-11-20">
-            <button onclick="addAppleCalendar()">일정 추가</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    const joinDate = new Date('2026-05-26');
-    const today = new Date();
-
-    function calculateLeave() {
-        let monthsDiff = (today.getFullYear() - joinDate.getFullYear()) * 12 + (today.getMonth() - joinDate.getMonth());
-        if (today.getDate() < joinDate.getDate()) { monthsDiff--; }
-        
-        const accruedLeave = Math.min(Math.max(monthsDiff, 0), 11);
-        document.getElementById('accrued').innerText = accruedLeave + "개";
-
-        const usedLeave = parseInt(document.getElementById('used').value) || 0;
-        const remainingLeave = accruedLeave - usedLeave;
-        document.getElementById('remaining').innerText = (remainingLeave >= 0 ? remainingLeave : 0) + "개";
-    }
-
-    function addAppleCalendar() {
-        const dateInput = document.getElementById('leave-date').value;
-        if (!dateInput) {
-            alert("날짜를 선택해 주세요!");
-            return;
-        }
-
-        const startDate = new Date(dateInput);
-        const endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 1);
-
-        const formatDate = (d) => d.toISOString().slice(0, 10).replace(/-/g, '');
-        const startStr = formatDate(startDate);
-        const endStr = formatDate(endDate);
-
-        const icsContent = [
-            "BEGIN:VCALENDAR",
-            "VERSION:2.0",
-            "PRODID:-//My Monthly Leave Manager//NONSGML v1.0//EN",
-            "BEGIN:VEVENT",
-            `DTSTART;VALUE=DATE:${startStr}`,
-            `DTEND;VALUE=DATE:${endStr}`,
-            "SUMMARY:월차 휴가 🏖️",
-            "DESCRIPTION:연차 계산기에서 등록한 휴가입니다.",
-            "END:VEVENT",
-            "END:VCALENDAR"
-        ].join("\r\n");
-
-        const encodedUri = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsContent);
-
-        const link = document.createElement('a');
-        link.href = encodedUri;
-        link.download = `월차_휴가_${dateInput}.ics`;
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    calculateLeave();
-</script>
-
-</body>
-</html>
+        input[type="date"] { flex: 2; padding: 12px; border: 1px solid #d2d2d7; border-radius: 10px; font-size: 15px; box-sizing: border-box; background: #fff; color: #1d1d1f;
